@@ -7,6 +7,7 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "base-shell": "^1.2.21",
+    "firebase": "^8.3.2",
     "github-markdown-css": "^4.0.0",
     "intl": "^1.2.5",
     "intl-locales-supported": "^1.8.12",

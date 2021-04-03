@@ -13,7 +13,7 @@ const config = {
     locales,
     defaultLocale: parseLanguages(['en', 'de', 'ru'], 'en'),
     onError: (e) => {
-      //console.warn(e)
+      console.warn(e)
       return
     },
   },
@@ -29,6 +29,9 @@ const config = {
   pages: {
     LandingPage: lazy(() => import('../pages/LandingPage/LandingPage')),
     PageNotFound: lazy(() => import('../pages/PageNotFound/PageNotFound')),
+  },
+  firebase: {
+
   },
 }
 
