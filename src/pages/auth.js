@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-//import { FirebaseContext } from "../";
 import StiledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "firebase/app";
 import withUser from "../components/User";
-import { ButtonGoTo } from "../App";
+import { Redirect } from "react-router";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles(() => ({
+  signin: {
+    display: "none",
+  },
+}));
 
 const Auth = withUser(({ user }) => {
   const [loading, setLoading] = useState(true);
-  //const firebase = useContext(FirebaseContext);
-	console.log(user?.displayName || 'not yet', user);
-  
+  const classes = useStyles();
+
   const uiConfig = {
     immediateFederatedRedirect: true,
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
@@ -22,24 +27,19 @@ const Auth = withUser(({ user }) => {
 
   return (
     <div id="firebaseui">
-      { user !== undefined && (user ? (
-        <ButtonGoTo
-          variant="contained"
-          color="primary"
-					toUrl="/"
-          onClick={() => {
-						firebase.auth().signOut()
-					}}
-        >
-          Salir
-        </ButtonGoTo>
-      ) : (
-        <StiledFirebaseAuth
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-        />
-      ))}
-      {loading && user === undefined && <div id="firebaseui-auth-loading">Cargando...</div>}
+      {user !== undefined &&
+        (user ? (
+          <Redirect to="/home" />
+        ) : (
+          <StiledFirebaseAuth
+            className={classes.signin}
+            uiConfig={uiConfig}
+            firebaseAuth={firebase.auth()}
+          />
+        ))}
+      {loading && user === undefined && (
+        <div id="firebaseui-auth-loading">Cargando...</div>
+      )}
     </div>
   );
 });
