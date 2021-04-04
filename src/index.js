@@ -7,6 +7,7 @@ import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
+import { UserProvider } from "./components/User";
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -23,8 +24,8 @@ if (!firebase.apps.length) {
 export const FirebaseContext = createContext(firebase);
 
 render(
-  <FirebaseContext.Provider value={firebase}>
+  <UserProvider>
     <App />
-  </FirebaseContext.Provider>,
+  </UserProvider>,
   document.getElementById("root")
 );
