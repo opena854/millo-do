@@ -5,6 +5,7 @@ import Auth from "./pages/auth";
 import LandingPage from "./pages/landing";
 import Home from "./pages/home";
 import Bar from "./components/navbar";
+import PrivateRoute from "./components/privateroute";
 
 const App = () => {
   return (
@@ -12,7 +13,7 @@ const App = () => {
       <Bar />
       <Switch>
         <Route path="/auth" component={Auth} />
-        <Route path="/home" component={Home} />
+        <PrivateRoute path="/home" component={Home} />
         <Route path="/" component={LandingPage} />
       </Switch>
     </BrowserRouter>
