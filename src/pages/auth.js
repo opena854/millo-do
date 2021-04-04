@@ -3,14 +3,15 @@ import React, { useState } from "react";
 import StiledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "firebase/app";
 import withUser from "../components/User";
-import { Button } from "@material-ui/core";
+import { ButtonGoTo } from "../App";
 
 const Auth = withUser(({ user }) => {
   const [loading, setLoading] = useState(true);
   //const firebase = useContext(FirebaseContext);
-
+	console.log(user?.displayName || 'not yet', user);
+  
   const uiConfig = {
-    //immediateFederatedRedirect: true,
+    immediateFederatedRedirect: true,
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
     callbacks: {
       uiShown: () => setLoading(false),
@@ -21,21 +22,24 @@ const Auth = withUser(({ user }) => {
 
   return (
     <div id="firebaseui">
-      {user ? (
-        <Button
+      { user !== undefined && (user ? (
+        <ButtonGoTo
           variant="contained"
           color="primary"
-          onClick={() => firebase.auth().signOut()}
+					toUrl="/"
+          onClick={() => {
+						firebase.auth().signOut()
+					}}
         >
           Salir
-        </Button>
+        </ButtonGoTo>
       ) : (
         <StiledFirebaseAuth
           uiConfig={uiConfig}
           firebaseAuth={firebase.auth()}
         />
-      )}
-      {loading && <div id="firebaseui-auth-loading">Cargando...</div>}
+      ))}
+      {loading && user === undefined && <div id="firebaseui-auth-loading">Cargando...</div>}
     </div>
   );
 });

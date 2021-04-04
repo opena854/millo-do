@@ -7,8 +7,12 @@ import Home from "./pages/home";
 import withUser from "./components/User";
 import { Button, Typography } from "@material-ui/core";
 
-const ButtonGoTo = withRouter(({ history, children, toUrl, ...props }) => (
-  <Button {...props} onClick={() => history.push(toUrl)}>
+export const ButtonGoTo = withRouter(({ history, children, toUrl, variant, onClick = ()=>{}, color,...props }) => (
+  <Button variant={variant} color={color} 
+    onClick={() => {
+      onClick(); 
+      history.push(toUrl);
+    }}>
     {children}
   </Button>
 ));
@@ -22,13 +26,10 @@ const App = withUser(({ user }) => {
           <Route path="/home" component={Home} />
           <Route path="/" component={LandingPage} />
         </Switch>
-        {user ? (
-          <Typography variant="body2">{user?.displayName}</Typography>
-        ) : (
+          <Typography variant="body2">{user?.displayName || 'none'}</Typography>
           <ButtonGoTo variant="contained" color="primary" toUrl="/auth">
             Entrar
           </ButtonGoTo>
-        )}
       </BrowserRouter>
     </React.Fragment>
   );
