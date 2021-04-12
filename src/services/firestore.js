@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 const PREFLEN = 4
-const salt = ( a = new Date() ) => [a.getFullYear()%2000 - 21, a.getMonth(), a.getDay()].map( val => CHARS.charAt(val % CHARS.length) ).join("")
+const salt = ( a = new Date() ) => [a.getFullYear()%2000 - 20, a.getMonth(), a.getDate()].map( val => CHARS.charAt(val % CHARS.length) ).join("")
 
 const newId = (collName = "") => {
   collName = (collName ? collName.substring(0, PREFLEN) + "-" : "m") + salt();
