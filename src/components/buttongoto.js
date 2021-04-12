@@ -11,6 +11,7 @@ export const ButtonGoTo = withRouter(
     variant,
     onClick = () => {},
     color,
+    state,
     ...props
   }) => (
     <Button
@@ -18,7 +19,7 @@ export const ButtonGoTo = withRouter(
       color={color}
       onClick={() => {
         onClick();
-        history.push(toUrl);
+        history.push(toUrl, state);
       }}
     >
       {children}
