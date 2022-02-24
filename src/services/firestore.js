@@ -1,17 +1,20 @@
-import firebase from "firebase/app";
+
+import { getDoc, getDocs, doc as firestoreDoc, collection, getFirestore } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-const PREFLEN = 4
-const salt = ( a = new Date() ) => [a.getFullYear()%2000 - 20, a.getMonth(), a.getDate()].map( val => CHARS.charAt(val % CHARS.length) ).join("")
+const ALLOWED_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+const PREFIX_LEN = 4
+const ID_LENGHT = 20
 
-const newId = (collName = "") => {
-  collName = (collName ? collName.substring(0, PREFLEN) + "-" : "m") + salt();
+const salt = ( a = new Date() ) => [a.getFullYear()%2000 - 20, a.getMonth(), a.getDate()].map( val => ALLOWED_CHARS.charAt(val % ALLOWED_CHARS.length) ).join("")
+const randomChar = () => ALLOWED_CHARS.charAt( Math.floor(Math.random() * ALLOWED_CHARS.length ))
 
-  const len = 20 - collName.length;
-  const Arr = new Array(len).fill("");
-  const Arr2 = Arr.map( () => CHARS.charAt( Math.floor(Math.random() * CHARS.length )))
-  return collName.concat(Arr2.join(""));
+const newId = (collectionName = "") => {
+  let newId = (collectionName ? collectionName.substring(0, PREFIX_LEN) + "-" : "m") + salt();
+  
+  while (newId.length < ID_LENGHT) newId.concat(randomChar())
+
+  return newId
 };
 
 export const useDocument = ({ /* documentReference, */ path = [] }) => {
@@ -25,14 +28,14 @@ export const useDocument = ({ /* documentReference, */ path = [] }) => {
   _path.push(_id);
 
   const pathstr = (_path?.join && _path.join("/")) || _path;
-  const [doc] = useState(firebase.firestore().doc(pathstr))
+  const [doc] = useState(getDoc(firestoreDoc(getFirestore(), pathstr)) )
   
   useEffect(() => {
     if (_id === _last)
-      doc.get().then(
+      doc.then(
         (_data) => {
           console.log("loaded", pathstr);
-          if (!_data.exists) setError({ ...Error("Not Found"), name:"Database Error" });
+          if (!_data.exists()) setError({ ...Error("Not Found"), name:"Database Error" });
           setResult({
             ..._data.data(),
           });
@@ -66,9 +69,9 @@ export const useCollection = ({ collectionReference, path = [] }) => {
   useEffect(() => {
     console.log("loading", pathstr);
     const coll =
-      collectionReference || firebase.firestore().collection(pathstr);
+      collectionReference || getDocs(collection(getFirestore(),pathstr));
 
-    coll.get().then(
+    coll.then(
       (_data) => {
         setLoading(false);
         setResult(

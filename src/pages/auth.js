@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import StiledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import firebase from "firebase/app";
+import { GoogleAuthProvider, getAuth } from 'firebase/auth'
 import withUser from "../components/User";
-import { Redirect } from "react-router";
+import { Navigate } from "react-router";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
@@ -17,7 +17,7 @@ const Auth = withUser(({ user }) => {
 
   const uiConfig = {
     immediateFederatedRedirect: true,
-    signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+    signInOptions: [GoogleAuthProvider.PROVIDER_ID],
     callbacks: {
       uiShown: () => setLoading(false),
       signInSuccessWithAuthResult: () => true,
@@ -29,12 +29,12 @@ const Auth = withUser(({ user }) => {
     <div id="firebaseui">
       {user !== undefined &&
         (user ? (
-          <Redirect to="/home" />
+          <Navigate to="/home" />
         ) : (
           <StiledFirebaseAuth
             className={classes.signin}
             uiConfig={uiConfig}
-            firebaseAuth={firebase.auth()}
+            firebaseAuth={getAuth()}
           />
         ))}
       {loading && user === undefined && (

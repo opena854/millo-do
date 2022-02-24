@@ -1,16 +1,16 @@
-import React, { createContext } from "react";
+import React from "react";
 import { render } from "react-dom";
 import App from "./App";
 
-import firebase from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 
 import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 import { UserProvider } from "./components/User";
 
-if (!firebase.apps.length) {
-  firebase.initializeApp({
+if (!getApps().length) {
+  initializeApp({
     apiKey: "AIzaSyCfHb4xd5K2BLjfnoR0ar7YRJABo8wPyFw",
     authDomain: "millo-do.firebaseapp.com",
     projectId: "millo-do",
@@ -20,9 +20,6 @@ if (!firebase.apps.length) {
     measurementId: "G-QJDYVRK7VM",
   });
 }
-
-export const FirebaseContext = createContext(firebase);
-
 render(
   <UserProvider>
     <App />

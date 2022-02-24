@@ -1,11 +1,9 @@
 import React from "react";
 
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
-export const ButtonGoTo = withRouter(
-  ({
-    history,
+export const ButtonGoTo = ({
     children,
     toUrl,
     variant,
@@ -13,18 +11,21 @@ export const ButtonGoTo = withRouter(
     color,
     state,
     ...props
-  }) => (
+  }) => {
+    const navigate = useNavigate()
+    
+    return (
     <Button
       variant={variant}
       color={color}
       onClick={() => {
         onClick();
-        history.push(toUrl, state);
+        navigate(toUrl, { state })
       }}
     >
       {children}
     </Button>
-  )
-);
+  )}
+
 
 export default ButtonGoTo;
