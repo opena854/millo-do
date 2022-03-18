@@ -1,20 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import StiledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { GoogleAuthProvider, getAuth } from 'firebase/auth'
-import withUser from "../components/User";
-import { Navigate } from "react-router";
-import { makeStyles } from "@material-ui/core";
+import { useUser } from "./user";
 
-const useStyles = makeStyles(() => ({
-  signin: {
-    display: "none",
-  },
-}));
-
-const Auth = withUser(({ user }) => {
+const Auth = () => {
+  const user = useUser();
   const [loading, setLoading] = useState(true);
-  const classes = useStyles();
-
+  
   const uiConfig = {
     immediateFederatedRedirect: true,
     signInOptions: [GoogleAuthProvider.PROVIDER_ID],
@@ -29,10 +21,9 @@ const Auth = withUser(({ user }) => {
     <div id="firebaseui">
       {user !== undefined &&
         (user ? (
-          <Navigate to="/home" />
+          <h5>Hola { user.displayName }</h5>
         ) : (
           <StiledFirebaseAuth
-            className={classes.signin}
             uiConfig={uiConfig}
             firebaseAuth={getAuth()}
           />
@@ -42,6 +33,6 @@ const Auth = withUser(({ user }) => {
       )}
     </div>
   );
-});
+};
 
 export default Auth;
