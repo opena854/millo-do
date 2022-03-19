@@ -1,12 +1,11 @@
-import { Typography } from "@mui/material"
 import { Outlet } from "react-router-dom"
+import AppBar from "../components/appbar"
 
 
 const Layout = () => {
-  
   return (
-    <div>
-      <Typography>Hola</Typography>
+    <div className="App">
+      <AppBar />
       <Outlet />
     </div>
   )

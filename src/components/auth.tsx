@@ -1,38 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Box } from '@mui/material'
 import StiledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import { GoogleAuthProvider, getAuth } from 'firebase/auth'
+import { GoogleAuthProvider, getAuth, signOut } from 'firebase/auth'
 import { useUser } from "./user";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Auth = () => {
-  const user = useUser();
-  const [loading, setLoading] = useState(true);
-  
+type LocationState = {
+  from?: {
+    pathname?: string
+  }
+}
+
+export const SignIn = () => {
+  const location = useLocation().state as LocationState || null;
+
+  const from : any = location?.from?.pathname || "/" ;
+
   const uiConfig = {
     immediateFederatedRedirect: true,
     signInOptions: [GoogleAuthProvider.PROVIDER_ID],
     callbacks: {
-      uiShown: () => setLoading(false),
+      uiShown: () => {},
       signInSuccessWithAuthResult: () => true,
     },
-    signInSuccessUrl: "/home",
+    signInSuccessUrl: from,
   };
 
   return (
     <div id="firebaseui">
-      {user !== undefined &&
-        (user ? (
-          <h5>Hola { user.displayName }</h5>
-        ) : (
-          <StiledFirebaseAuth
-            uiConfig={uiConfig}
-            firebaseAuth={getAuth()}
-          />
-        ))}
-      {loading && user === undefined && (
-        <div id="firebaseui-auth-loading">Cargando...</div>
-      )}
+      <Box sx={{ display: "none" }}>
+        <StiledFirebaseAuth uiConfig={uiConfig} firebaseAuth={getAuth()} />
+      </Box>
     </div>
   );
 };
 
-export default Auth;
+export const SignOut = () => {
+  const navigate = useNavigate();
+
+  useEffect ( () => {
+    signOut(getAuth()).then( () => navigate("/"))
+  }, []);
+  
+  return <div>Signing out...</div>
+
+};
+

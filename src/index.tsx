@@ -1,6 +1,5 @@
-import React from "react";
 import { render } from "react-dom";
-import firebaseConfig from "./firebase.config.json"
+import { firebase as firebaseConfig } from "./config"
 
 import { initializeApp } from "firebase/app";
 import "firebase/analytics";
