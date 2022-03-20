@@ -11,13 +11,12 @@ export const firebase = {
 }
 
 export interface Page {
-  displayName?: string,
+  displayName: string,
   path: To,
   options?: NavigateOptions
 }
 
 export const menu : Page[] = [
-  { path: "/" },
   { displayName: "Terceros", path: "/thirds" },
   { displayName: "Ventas", path: "/sales" },
   { displayName: "Configuración", path: "/settings" },

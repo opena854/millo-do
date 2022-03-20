@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { Box } from '@mui/material'
 import StiledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { GoogleAuthProvider, getAuth, signOut } from 'firebase/auth'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Navigate, Outlet } from "react-router-dom";
+import { useUser } from "./user";
 
 type LocationState = {
   from?: {
@@ -44,4 +45,14 @@ export const SignOut = () => {
   return <div>Signing out...</div>
 
 };
+
+export const Protected = () => {  
+  let user = useUser();
+  let location = useLocation();
+
+  if (user!== undefined && !user) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+  return <Outlet />;
+}
 

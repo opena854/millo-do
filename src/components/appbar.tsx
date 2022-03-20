@@ -24,31 +24,45 @@ const AppBar = () => {
       <MuiAppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Typography variant="h6" noWrap component={"div"} sx={{ mr: 2 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component={"div"}
+              sx={{ mr: 2, cursor: "pointer" }}
+              onClick={() => goto("/")}
+            >
               MILLO
             </Typography>
             <Box sx={{ flexGrow: 1, display: "flex" }}>
-              {menu
-                .filter(({ displayName }) => !!displayName)
-                .map(({ displayName, path, options }) => (
-                  <Button
-                    key={displayName}
-                    onClick={() => goto(path, options)}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                  >
-                    {displayName}
-                  </Button>
-                ))}
+              {menu.map(({ displayName, path, options }) => (
+                <Button
+                  key={displayName}
+                  onClick={() => goto(path, options)}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {displayName}
+                </Button>
+              ))}
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-                {
-                    user 
-                    ? <Tooltip title={user.displayName || ""}><Button sx={{ my: 2, color: "white", display: "block" }} onClick={() => goto("signout")} >Salir</Button></Tooltip>
-                    : <Button disabled={ user === undefined } sx={{ my: 2, color: "white", display: "block" }} onClick={() => goto("signin")}>Acceder</Button>
-
-                }
-                
-                
+              {user ? (
+                <Tooltip title={user.displayName || ""}>
+                  <Button
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    onClick={() => goto("signout")}
+                  >
+                    Salir
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button
+                  disabled={user === undefined}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                  onClick={() => goto("signin")}
+                >
+                  Acceder
+                </Button>
+              )}
             </Box>
           </Toolbar>
         </Container>

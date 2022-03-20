@@ -2,21 +2,27 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Thirds from "./pages/thirds";
 import Home from "./pages/home";
 import Layout from "./pages/layout";
-import { SignIn, SignOut } from "./components/auth";
+import { Protected, SignIn, SignOut } from "./components/auth";
+import Forbiden from "./pages/forbiden";
+import Third from "./pages/third";
 
 const App = () => {
   
   return (
     <BrowserRouter>
-      <Routes>
+      <Routes> 
         <Route element={<Layout />}>
           <Route path="/" element={<Home />}  />
-          <Route path="thirds" element={<Thirds />} />
-          
+          <Route element={<Protected />}>
+            <Route path="thirds">
+              <Route path=":id" element={<Third />} />
+              <Route index element={<Thirds />} />
+            </Route>
+          </Route>
           <Route path="signin" element={<SignIn />} />
           <Route path="signout" element={<SignOut />} />
 
-          <Route path="*" element={<Home />}  />
+          <Route path="*" element={<Forbiden />}  />
         </Route>
       </Routes>
     </BrowserRouter>
