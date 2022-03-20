@@ -23,7 +23,9 @@ export const menu : Page[] = [
   { displayName: "Configuración", path: "/settings" },
 ]
 
-export default {
+const config = {
   menu,
   firebase
 }
+
+export default config
