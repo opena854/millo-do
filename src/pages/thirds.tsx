@@ -2,7 +2,7 @@ import { Paper, Typography } from "@mui/material"
 import { GridColumns, DataGrid } from "@mui/x-data-grid"
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import { Third, useThirds } from "../services/store"
+import { useThirds } from "../services/store"
 
 const columns: GridColumns = [
   {
