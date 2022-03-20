@@ -1,5 +1,5 @@
 import { AppBar as MuiAppBar, Box, Button, Container, Toolbar, Tooltip, Typography } from "@mui/material"
-import { useNavigate, NavLink } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { menu } from '../config'
 import { useUser } from "./user";
 
