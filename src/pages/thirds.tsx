@@ -1,9 +1,10 @@
-import { Paper, Typography } from "@mui/material"
+import { Box, Fab, Paper, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCollection } from "../services/store"
 import { ThirdModel } from "../model/third";
+import { Add } from "@mui/icons-material";
 
 const Thirds = () => {
   const [thirds, loading] = useCollection(ThirdModel.dbPath)
@@ -24,6 +25,7 @@ const Thirds = () => {
           onRowDoubleClick={row => navigate(`${row.row.document_id}`)}
         />
       </Paper>
+      <Box sx={{ '& > :not(style)': { m: 1 } }}><Fab color="primary" aria-label="add" onClick={() => navigate("new")}><Add /></Fab></Box>
     </Fragment>
   );
 }

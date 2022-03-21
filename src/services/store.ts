@@ -1,125 +1,97 @@
-import { collection, doc, onSnapshot, query, DocumentData } from "firebase/firestore"
-import { useEffect, useState } from "react";
+import { collection, doc, onSnapshot, query, DocumentData, CollectionReference, setDoc, addDoc, DocumentReference } from "firebase/firestore"
+import { useEffect, useMemo, useState } from "react";
 import { useSession } from "../components/user"
 
-
-export interface Third {
-    document_id?: string,
-    id: string,
-    tipo_id: 0 | 1 | 2,
-    nombre: string
-}
-
-
-export const useThirds = () => {
-    const session = useSession();
-    const realm = session?.realm;
-    const [docs, setDocs] = useState< Third[] >([])
-    
-    useEffect(() => {
-        if (realm) {
-            const q = query(collection(realm, "terceros"));
-            onSnapshot(q, (querySnapshot) => {
-                
-                setDocs(
-                  querySnapshot.docs
-                    .map((doc) => ({
-                      document_id: doc.id,
-                      data: doc.data(),
-                    }))
-                    .map(({ document_id, data: { id, tipo_id, nombre } }) => ({
-                      document_id: document_id,
-                      id: id,
-                      tipo_id: tipo_id,
-                      nombre: nombre,
-                    }))
-                );
-                
-            })
-        }
-    },[realm])
-
-    return docs;
-}
-
-
-export const useThird = (id: string | undefined) => {
-    const session = useSession();
-    const realm = session?.realm;
-    const [third, setThird] = useState< Third | undefined>(undefined)
-    
-    useEffect(() => {
-        if (realm && id) {
-            const d = doc(realm, `terceros/${id}`)
-            
-            onSnapshot(d, (docSnapshot) => {
-                const data = docSnapshot.data();
-                
-                setThird(data ? {
-                    document_id: docSnapshot.id,
-                    id: data.id,
-                    tipo_id: data.tipo_id,
-                    nombre: data.nombre,
-                } : undefined)
-            })
-        }
-    },[realm, id])
-
-    return third;
-}
-
-
-
-export const useCollection = (path: string) :[DocumentData[], boolean] => {
+export const useCollection = (path: string) :[DocumentData[], boolean, SaveDocument | undefined] => {
     const session = useSession();
     const realm = session?.realm;
     const [docs, setDocs] = useState<DocumentData[]>([])
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (realm) {
-            const q = query(collection(realm, path));
-            
-            return onSnapshot(q, (querySnapshot) => {
-                
-                setDocs(
-                  querySnapshot.docs
-                    .map((doc) => ({
-                      document_id: doc.id,
-                      ...(doc.data()),
-                    }))
-                );
-                
-                setLoading(false);
-            })
-        }
-    },[realm, path])
+    const [reference, saveDoc] = useMemo( () => {
+        if (realm)  {
+            const ref = collection(realm, path)
+            return [ref, saveDocument(ref)]
+        } else return [undefined, undefined]
+    }, [realm, path])
+    
+    useEffect(
+      () =>
+        reference &&
+        onSnapshot(query(reference), (querySnapshot) => {
+          setDocs(
+            querySnapshot.docs.map((doc) => ({
+              document_id: doc.id,
+              ...doc.data(),
+            }))
+          );
 
-    return [docs, loading];
+          setLoading(false);
+        }),
+
+      [reference]
+    );
+
+    return [docs, loading, saveDoc];
 }
 
 
-export const useDocument = (path: string, id: string | undefined): [DocumentData | undefined, boolean] => {
+export const useDocument = (path: string, id: string | undefined): [DocumentData | undefined, boolean, SaveDocument | undefined] => {
     const session = useSession();
     const realm = session?.realm;
     const [document, setDocument] = useState< DocumentData | undefined>(undefined)
     const [loading, setLoading] = useState(true);
     
-    useEffect(() => {
-        if (realm && id) {
-            const d = doc(realm, path, id)
-            
-            onSnapshot(d, (docSnapshot) => {
-                const data = docSnapshot.data();
-                
-                setDocument(data ? {
-                    document_id: docSnapshot.id,
-                    ...data,
-                } : undefined)
-                setLoading(false);
-            })
+    const [reference, saveDoc] = useMemo( () => {
+        if (!realm)
+            return [undefined, undefined]
+        else if (!id)
+            return [undefined, saveDocument(collection(realm, path))]
+        else {
+            const ref =  doc(realm, path, id)
+            return [ref, saveDocument(ref)]
         }
-    },[realm, path, id])
+    }, [realm, path, id])
+    
+    useEffect(
+      () =>
+        reference &&
+        onSnapshot(reference, (docSnapshot) => {
+          const data = docSnapshot.data();
 
-    return [document, loading];
+          setDocument(
+            data
+              ? {
+                  document_id: docSnapshot.id,
+                  ...data,
+                }
+              : undefined
+          );
+          setLoading(false);
+        }),
+
+      [reference]
+    );
+
+    return [document, !!id && loading, saveDoc];
 }
+
+type SaveDocument = ((document: DocumentData) => Promise<string>) 
+
+type SaveDocumentOverload = {
+    ( doc: DocumentReference ): SaveDocument;
+    ( collection: CollectionReference ): SaveDocument;
+}
+
+
+const saveDocument :SaveDocumentOverload = ( reference: CollectionReference |  DocumentReference ) : SaveDocument => (document: DocumentData) => {
+    const { document_id, ...data } = document;
+
+    if (document_id && typeof document_id === "string" && reference.type === "document") {
+        return setDoc(reference, data).then( () => reference.id )
+    } else if (reference.type === "collection") {
+        return addDoc(reference, data).then( value => value.id )
+    } else throw Error("Incorrect document data or origin to save.");
+}
+
+

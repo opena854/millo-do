@@ -7,14 +7,14 @@ import { useDocument } from "../services/store"
 
 const Third = () => {
   const { id } = useParams<"id">();
-  const [data, loading] = useDocument(ThirdModel.dbPath, id);
+  const [data, loading, saveDocument] = useDocument(ThirdModel.dbPath, id === "new" ? undefined : id);
 
   return (
     <Fragment>
       <Typography variant="h4" mb={2}>
         Editar Tercero
       </Typography>
-      {loading ? <div>Loading...</div> : <Form document={data} fields={ThirdModel.formFields} />}
+      {loading ? <div>Loading...</div> : <Form document={data} fields={ThirdModel.formFields} onSubmit={saveDocument} />}
     </Fragment>
   );
 }
