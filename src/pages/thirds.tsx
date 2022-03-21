@@ -1,24 +1,12 @@
 import { Paper, Typography } from "@mui/material"
-import { GridColumns, DataGrid } from "@mui/x-data-grid"
+import { DataGrid } from "@mui/x-data-grid"
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import { useThirds } from "../services/store"
-
-const columns: GridColumns = [
-  {
-    field: "id",
-    headerName: "Identificador",
-    width: 200
-  },
-  {
-    field: "nombre",
-    headerName: "Nombre",
-    width: 400
-  }
-];
+import { useCollection } from "../services/store"
+import { ThirdModel } from "../model/third";
 
 const Thirds = () => {
-  const thirds = useThirds()
+  const [thirds, loading] = useCollection(ThirdModel.dbPath)
   const navigate = useNavigate()
 
   return (
@@ -26,8 +14,9 @@ const Thirds = () => {
       <Typography variant="h4" mb={2} >Terceros</Typography>
       <Paper elevation={3}>
         <DataGrid 
+          loading={loading}
           rows={thirds}
-          columns={columns}
+          columns={ThirdModel.gridColumns}
           pageSize={5}
           rowsPerPageOptions={[5]}
           autoHeight

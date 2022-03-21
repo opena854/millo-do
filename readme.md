@@ -13,9 +13,9 @@ Desde el directorio del proyecto, ejecuta:
 ```
 
 ```
-  npm run
+  npm start
 ```
 
 ### Crea un branch
 
-Cuando quieras editar, crea un nuevo branch donde hacer tus cambios. Ten en cuenta que cada commit en main hará que esa versión se compile y publicque en [https://millo-do.firebaseapp.com/](https://millo-do.firebaseapp.com/)
+Cuando quieras editar, crea un nuevo branch donde hacer tus cambios. Ten en cuenta que cada commit en `main` hará que esa versión se compile y publicque en [https://millo-do.firebaseapp.com/](https://millo-do.firebaseapp.com/)
