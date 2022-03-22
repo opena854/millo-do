@@ -2,29 +2,20 @@ import Model from ".";
 
 export const ThirdModel: Model = {
   dbPath: "terceros",
-  gridColumns: [
+  fields: [
     {
-      field: "id",
-      headerName: "Identificador",
-      width: 200,
+      id: "documento",
+      label: "Documento",
+      required: true,
+      size: "sm"
     },
     {
-      field: "nombre",
-      headerName: "Nombre",
-      width: 400,
-    },
-  ],
-  formFields: [
-    {
-      name: "id",
-      label: "ID",
-      required: true
-    },
-    {
-      name: "nombre",
+      id: "nombre",
       label: "Nombre",
-      required: true
-    }
+      required: true,
+      size: 'md'
+    },
+    
   ]
 };
 

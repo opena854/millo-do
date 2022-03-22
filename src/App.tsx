@@ -2,9 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Thirds from "./pages/thirds";
 import Home from "./pages/home";
 import Layout from "./pages/layout";
-import { Protected, SignIn, SignOut } from "./components/auth";
+import { SignIn, SignOut } from "./components/auth";
 import Forbiden from "./pages/forbiden";
 import Third from "./pages/third";
+import Protected from "./pages/protected";
 
 const App = () => {
   

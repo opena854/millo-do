@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useCollection } from "../services/store"
 import { ThirdModel } from "../model/third";
 import { Add } from "@mui/icons-material";
+import { getGridColumns } from "../model";
 
 const Thirds = () => {
   const [thirds, loading] = useCollection(ThirdModel.dbPath)
@@ -17,12 +18,12 @@ const Thirds = () => {
         <DataGrid 
           loading={loading}
           rows={thirds}
-          columns={ThirdModel.gridColumns}
+          columns={getGridColumns(ThirdModel.fields)}
           pageSize={5}
           rowsPerPageOptions={[5]}
           autoHeight
           disableSelectionOnClick
-          onRowDoubleClick={row => navigate(`${row.row.document_id}`)}
+          onRowDoubleClick={row => navigate(`${row.row.id}`)}
         />
       </Paper>
       <Box sx={{ '& > :not(style)': { m: 1 } }}><Fab color="primary" aria-label="add" onClick={() => navigate("new")}><Add /></Fab></Box>

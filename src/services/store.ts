@@ -2,7 +2,9 @@ import { collection, doc, onSnapshot, query, DocumentData, CollectionReference, 
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "../components/user"
 
-export const useCollection = (path: string) :[DocumentData[], boolean, SaveDocument | undefined] => {
+type  UseCollection = (path: string) => [DocumentData[], boolean, SaveDocument | undefined]
+
+export const useCollection : UseCollection = path => {
     const session = useSession();
     const realm = session?.realm;
     const [docs, setDocs] = useState<DocumentData[]>([])
@@ -21,8 +23,8 @@ export const useCollection = (path: string) :[DocumentData[], boolean, SaveDocum
         onSnapshot(query(reference), (querySnapshot) => {
           setDocs(
             querySnapshot.docs.map((doc) => ({
-              document_id: doc.id,
               ...doc.data(),
+              id: doc.id,
             }))
           );
 
@@ -35,8 +37,9 @@ export const useCollection = (path: string) :[DocumentData[], boolean, SaveDocum
     return [docs, loading, saveDoc];
 }
 
+type  UseDocument = (path: string, id: string | undefined) => [DocumentData | undefined, boolean, SaveDocument | undefined]
 
-export const useDocument = (path: string, id: string | undefined): [DocumentData | undefined, boolean, SaveDocument | undefined] => {
+export const useDocument :  UseDocument = (path, id) => {
     const session = useSession();
     const realm = session?.realm;
     const [document, setDocument] = useState< DocumentData | undefined>(undefined)
@@ -62,8 +65,8 @@ export const useDocument = (path: string, id: string | undefined): [DocumentData
           setDocument(
             data
               ? {
-                  document_id: docSnapshot.id,
                   ...data,
+                  id: docSnapshot.id,
                 }
               : undefined
           );
@@ -83,11 +86,10 @@ type SaveDocumentOverload = {
     ( collection: CollectionReference ): SaveDocument;
 }
 
+const saveDocument : SaveDocumentOverload = reference => document => {
+    const { id, ...data } = document;
 
-const saveDocument :SaveDocumentOverload = ( reference: CollectionReference |  DocumentReference ) : SaveDocument => (document: DocumentData) => {
-    const { document_id, ...data } = document;
-
-    if (document_id && typeof document_id === "string" && reference.type === "document") {
+    if (id && typeof id === "string" && reference.type === "document") {
         return setDoc(reference, data).then( () => reference.id )
     } else if (reference.type === "collection") {
         return addDoc(reference, data).then( value => value.id )
