@@ -1,12 +1,13 @@
-import { Button, Card, CardActions, CardContent, TextField, TextFieldProps } from "@mui/material"
+import { Button, Card, CardActions, CardContent, MenuItem, TextField } from "@mui/material"
 import { Save } from "@mui/icons-material"
 import { useEffect, useState, ReactElement } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { DocumentData } from "firebase/firestore"
+import { getTextField, ModelField } from "../model";
 
 type FormComponent = (props: {
   document: DocumentData | undefined, 
-  fields: TextFieldProps[],
+  fields: ModelField[],
   onSubmit?: (data: DocumentData) => any
 }) => ReactElement
 
@@ -30,12 +31,14 @@ const Form : FormComponent = ({document, fields, onSubmit }) => {
           "& > :not(style)": { m: 1 },
         }}
       >
-        {fields.map((format) => (
+        {fields.map(format => (
           <Controller
-            name={format.name || ""}
+            name={format.path || format.id}
             control={control}
             render={({ field }) => (
-              <TextField label={format.label} {...field} />
+              <TextField { ...getTextField(format) } {...field}>
+                { format.options && format.options.map( ({value, disabled, label}) => <MenuItem value={value} disabled={disabled} >{label}</MenuItem> ) }
+              </TextField>
             )}
           />
         ))}

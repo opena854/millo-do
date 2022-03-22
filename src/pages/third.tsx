@@ -2,7 +2,6 @@ import { Typography } from "@mui/material"
 import { Fragment } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Form from "../components/form"
-import { getTextFields } from "../model"
 import ThirdModel from "../model/third"
 import { useDocument } from "../services/store"
 
@@ -21,7 +20,7 @@ const Third = () => {
       <Typography variant="h4" mb={2}>
         Editar Tercero
       </Typography>
-      {loading ? <div>Loading...</div> : <Form document={data} fields={getTextFields(ThirdModel.fields)} onSubmit={onSubmit} />}
+      {loading ? <div>Loading...</div> : <Form document={data} fields={ThirdModel.fields} onSubmit={onSubmit} />}
     </Fragment>
   );
 }

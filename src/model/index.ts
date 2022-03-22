@@ -1,3 +1,4 @@
+import { SelectOption } from "@mui/base";
 import { TextFieldProps } from "@mui/material";
 import { GridColumns } from "@mui/x-data-grid";
 
@@ -6,12 +7,13 @@ interface Model {
   fields: ModelField[]
 }
 
-interface ModelField {
+export interface ModelField {
   id: string,
   path?: string,
   label?: string,
   size?:  'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl',
-  required?: boolean
+  required?: boolean,
+  options?: SelectOption<any>[]
 }
 
 export default Model
@@ -25,19 +27,23 @@ const sizes = {
   'xl': 3,
   'xxl': 5
  }
+ 
 
- export const getGridColumns = (fields: ModelField[]) : GridColumns => fields.map(field => ({
+export const getGridColumns = (fields: ModelField[]) : GridColumns => fields.map(field => ({
   field: field.path || field.id,
   headerName: field.label || field.id,
-  minWidth: 200 * sizes[field.size || 'md']
+  minWidth: 200 * sizes[field.size || 'md'],
+  valueGetter: field.options ? (params => (field.options?.find( opt => opt.value === params.value )?.label || "N/D")) : undefined
 }))
 
-export const getTextFields = (fields: ModelField[]) : TextFieldProps[] => fields.map(field => ({
+export const getTextField = (field: ModelField) : TextFieldProps => ({
   id: field.id,
   name: field.path || field.id,
   required: field.required,
   label: field.label || field.id,
-  sx: { minWidth: 200 * sizes[field.size || 'md'], m: 1 }
-}))
+  sx: { minWidth: 200 * sizes[field.size || 'md'], m: 1 },
+  select: field.options && !!field.options.length
+})
 
+export const getTextFields = (fields: ModelField[]) : TextFieldProps[] => fields.map(getTextField)
 
