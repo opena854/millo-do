@@ -21,8 +21,7 @@ export const ThirdModel: Model = {
       label: "Nombre",
       required: true,
       size: 'md'
-    },
-    
+    }
   ]
 };
 
