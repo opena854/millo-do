@@ -17,14 +17,8 @@ const Third = () => {
 
   return (
     <Fragment>
-      <Typography variant="h4" mb={2}>
-        Editar Tercero
-      </Typography>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <ThirdForm document={data} onSubmit={onSubmit} />
-      )}
+      <Typography variant="h4" mb={2}>{"Editar Tercero"}</Typography>
+      { loading ? <div>{"Loading..."}</div> : <ThirdForm document={data} onSubmit={onSubmit} /> }
     </Fragment>
   );
 }

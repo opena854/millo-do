@@ -1,14 +1,32 @@
-import { Box, Fab, Paper, Typography } from "@mui/material"
-import { DataGrid } from "@mui/x-data-grid"
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCollection } from "../services/store"
-import { ThirdModel } from "../model/third";
+import { Box, Fab, Paper, Typography } from "@mui/material"
+import { DataGrid, GridColumns } from "@mui/x-data-grid"
 import { Add } from "@mui/icons-material";
-import { getGridColumns } from "../model";
+import { useCollection } from "../services/store"
+import { getMinWidth, TIPO_DOCUMENTO } from "../model";
+
+const ThirdColumns: GridColumns = [
+  {
+    field: "tipo_documento",
+    headerName: "Tipo de Documento",
+    minWidth: getMinWidth('sm'),
+    valueGetter: params => TIPO_DOCUMENTO.find(opt => opt.value === params.value )?.label || "N/D"
+  },
+  {
+    field: "documento",
+    headerName: "Documento",
+    minWidth: getMinWidth('sm')
+  },
+  {
+    field: "nombre",
+    headerName: "Nombre",
+    minWidth: getMinWidth('md')
+  },
+]
 
 const Thirds = () => {
-  const [thirds, loading] = useCollection(ThirdModel.dbPath)
+  const [thirds, loading] = useCollection("Terceros")
   const navigate = useNavigate()
 
   return (
@@ -18,7 +36,7 @@ const Thirds = () => {
         <DataGrid 
           loading={loading}
           rows={thirds}
-          columns={getGridColumns(ThirdModel.fields)}
+          columns={ThirdColumns}
           pageSize={5}
           rowsPerPageOptions={[5]}
           autoHeight

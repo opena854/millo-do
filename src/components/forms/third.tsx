@@ -3,8 +3,7 @@ import { Save } from "@mui/icons-material"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form";
 import { Control, IFormComponent } from ".";
-
-const TIPO_DOCUMENTO = [{value: 0, label: "Cédula"}, {value: 1, label: "RNC"}, {value: 2, label: "Pasaporte"}]
+import { getMinWidth, TIPO_DOCUMENTO } from "../../model";
 
 const ThirdForm : IFormComponent = ({document, onSubmit }) => {
   const [cache, setCache] = useState(document);
@@ -31,7 +30,7 @@ const ThirdForm : IFormComponent = ({document, onSubmit }) => {
           fieldProps={{
             label: "Tipo de Documento",
             required: true,
-            sx: { minWidth: 200, m: 1 },
+            sx: { minWidth: getMinWidth('sm'), m: 1 },
             select: true,
           }}
           options={TIPO_DOCUMENTO}
@@ -42,7 +41,7 @@ const ThirdForm : IFormComponent = ({document, onSubmit }) => {
           fieldProps={{
             label: "Documento",
             required: true,
-            sx: { minWidth: 200, m: 1 },
+            sx: { minWidth: getMinWidth('sm'), m: 1 },
           }}
         />
 
@@ -52,7 +51,7 @@ const ThirdForm : IFormComponent = ({document, onSubmit }) => {
           fieldProps={{
             label: "Nombre",
             required: true,
-            sx: { minWidth: 400, m: 1 },
+            sx: { minWidth: getMinWidth('md'), m: 1 },
           }}
         />
       </CardContent>
