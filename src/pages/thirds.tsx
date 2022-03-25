@@ -26,7 +26,7 @@ const ThirdColumns: GridColumns = [
 ]
 
 const Thirds = () => {
-  const [thirds, loading] = useCollection("Terceros")
+  const [thirds, loading] = useCollection("terceros")
   const navigate = useNavigate()
 
   return (
