@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Thirds from "./pages/thirds";
+import Entidades from "./pages/entidades";
 import Home from "./pages/home";
 import Layout from "./pages/layout";
 import { SignIn, SignOut } from "./components/auth";
 import Forbiden from "./pages/forbiden";
-import Third from "./pages/third";
+import EditarEntidad from "./pages/entidades/editarentidad";
 import Protected from "./pages/protected";
+import EditarDocumento from "./pages/documentos/editar";
+import Documentos from "./pages/documentos";
 
 const App = () => {
   
@@ -15,9 +17,13 @@ const App = () => {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />}  />
           <Route element={<Protected />}>
-            <Route path="thirds">
-              <Route path=":id" element={<Third />} />
-              <Route index element={<Thirds />} />
+            <Route path="entidades">
+              <Route path=":id" element={<EditarEntidad />} />
+              <Route index element={<Entidades />} />
+            </Route>
+            <Route path="documentos">
+              <Route path=":id" element={<EditarDocumento />} />
+              <Route index element={<Documentos />} />
             </Route>
           </Route>
           <Route path="signin" element={<SignIn />} />

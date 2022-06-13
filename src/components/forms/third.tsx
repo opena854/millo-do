@@ -6,7 +6,7 @@ import { Control, IFormComponent } from ".";
 import { getMinWidth, TIPO_DOCUMENTO } from "../../model";
 
 
-const ThirdForm : IFormComponent = ({document, onSubmit }) => {
+const FormEntidad : IFormComponent = ({document, onSubmit }) => {
   const [cache, setCache] = useState(document);
   const { control, handleSubmit, reset, watch } = useForm({defaultValues: document  });
   
@@ -107,4 +107,4 @@ const ThirdForm : IFormComponent = ({document, onSubmit }) => {
   );
 }
 
-export default ThirdForm;
+export default FormEntidad;

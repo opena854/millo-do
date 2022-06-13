@@ -17,8 +17,8 @@ export interface Page {
 }
 
 export const menu : Page[] = [
-  { displayName: "Terceros", path: "/thirds" },
-  { displayName: "Ventas", path: "/sales" },
+  { displayName: "Entidades", path: "/entidades" },
+  { displayName: "Documentos", path: "/documentos" },
   { displayName: "Configuración", path: "/settings" },
 ]
 
